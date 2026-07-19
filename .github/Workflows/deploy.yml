@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Download the code from your repository
+      # 1. Download the code from your repository 
+      # changed file to the runner's workspace
       - name: Checkout Repository
         uses: actions/checkout@v4
 
