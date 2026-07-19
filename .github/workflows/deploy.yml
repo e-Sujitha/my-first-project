@@ -41,12 +41,12 @@ jobs:
       # 6. Build the Docker image locally on the GitHub runner
       - name: Build Docker Image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my-nginx-site:latest .
+          sudo docker build -t ${{ secrets.DOCKER_USERNAME }}/my-nginx-site:latest .
 
       # 7. Push the built image up to your Docker Hub repository
       - name: Push Docker Image
         run: |
-          docker push ${{ secrets.DOCKER_USERNAME }}/my-nginx-site:latest
+          sudo docker push ${{ secrets.DOCKER_USERNAME }}/my-nginx-site:latest
 
       # 8. SSH into EC2 and replace the container safely (No 'docker restart' bug)
       - name: Deploy to EC2 via SSH
@@ -57,14 +57,14 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             # Pull the brand new image down to the EC2 server
-            docker pull ${{ secrets.DOCKER_USERNAME }}/my-nginx-site:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-nginx-site:latest
 
             # Stop and remove the old container if it exists (|| true prevents crashing if it doesn't exist yet)
-            docker stop my-site || true
-            docker rm my-site || true
+            sudo docker stop my-site || true
+            sudo docker rm my-site || true
 
             # Spin up the new container with the fresh image
-            docker run -d \
+            sudo docker run -d \
               --name my-site \
               --restart unless-stopped \
               -p 80:80 \
